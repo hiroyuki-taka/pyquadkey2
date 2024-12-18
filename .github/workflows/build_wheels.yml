@@ -38,7 +38,9 @@ jobs:
           path: ./wheelhouse/*.whl
 
   create_release:
+    needs: build_wheels
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/download-artifacts@4
         with:
