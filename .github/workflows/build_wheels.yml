@@ -34,4 +34,19 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
+          name: wheels-${{ matrix.os }}
           path: ./wheelhouse/*.whl
+
+  create_release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifacts@4
+        with:
+          merge-multiple: true
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: "Release 0.3.1"
+          tag_name: "0.3.1"
+          draft: false
+          prerelease: false
