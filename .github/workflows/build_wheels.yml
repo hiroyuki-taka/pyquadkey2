@@ -1,9 +1,5 @@
 name: Build wheels
-on:
-  push:
-    branches:
-      - main
-  create:
+on: [push, pull_request]
 
 jobs:
   build_wheels:
