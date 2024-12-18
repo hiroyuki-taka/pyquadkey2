@@ -3,20 +3,19 @@ on: [push, pull_request]
 
 jobs:
   build_wheels:
-    name: Build wheels on ${{ matrix.os }} / ${{ matrix.python-version }}
+    name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-13, macos-14]
-        python-version: ["3.12", "3.13"]
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.13"
 
       - name: Install dependencies
         run: |
@@ -24,6 +23,9 @@ jobs:
           pip install -r requirements.txt
 
       - name: Build wheels
+        env:
+          CIBW_BUILD: cp310-* cp311-* cp312-* cp313-*
+          CIBW_SKIP: pp*
         run: |
           cd src/pyquadkey2/quadkey/tilesystem
           python setup.py build_ext --inplace
@@ -32,5 +34,4 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: cibw-wheel-${{ matrix.os }}-${{ strategy.job-index }}
           path: ./wheelhouse/*.whl
