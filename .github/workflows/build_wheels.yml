@@ -1,0 +1,25 @@
+name: Build wheels
+on:
+  push:
+    branches:
+      - main
+  create:
+
+jobs:
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+
+    steps:
+      - uses: actions/checkout/v4
+
+      - name: Build wheels
+        uses: pipx run cibuildwheel==2.22.0
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cibw-wheel-${{ matrix.os }}-${{ strategy.job-index }}
+          path: ./wheelhouse/*.whl
