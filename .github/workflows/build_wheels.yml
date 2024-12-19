@@ -27,11 +27,12 @@ jobs:
         env:
           CIBW_BUILD: cp310-* cp311-* cp312-* cp313-*
           CIBW_SKIP: pp*
-          CIBW_TEST_COMMAND: "python tests/__init__.py"
+          CIBW_BEFORE_BUILD: >
+            cd src/pyquadkey2/quadkey/tilesystem
+            && python setup.py build_ext --inplace
+          CIBW_TEST_COMMAND: >
+            python {package}/tests/__init__.py
         run: |
-          cd src/pyquadkey2/quadkey/tilesystem
-          python setup.py build_ext --inplace
-          cd ../../../..
           pipx run cibuildwheel==2.22.0
 
       - uses: actions/upload-artifact@v4
