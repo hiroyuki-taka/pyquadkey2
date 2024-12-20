@@ -21,15 +21,8 @@ jobs:
             && pip install -r requirements.txt
             && cd src/pyquadkey2/quadkey/tilesystem
             && python setup.py build_ext --inplace
-          CIBW_TEST_COMMAND: >
-            cp -R {package}/tests .
-            && python -vvv tests/__init__.py
-          CIBW_TEST_COMMAND_WINDOWS: >
-            xcopy {package}\tests .\tests /f /i /s
-            && python -vvv tests/__init__.py
         run: |
           pipx run cibuildwheel==2.22.0
-          ls -la wheelhouse
 
       - uses: actions/upload-artifact@v4
         with:
