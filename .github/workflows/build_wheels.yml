@@ -22,7 +22,7 @@ jobs:
             && cd src/pyquadkey2/quadkey/tilesystem
             && python setup.py build_ext --inplace
           CIBW_TEST_COMMAND: >
-            cp -R {package}/tests
+            cp -R {package}/tests .
             && python -vvv tests/__init__.py
           CIBW_TEST_COMMAND_WINDOWS: >
             xcopy {package}\tests .\tests /f /i /s
