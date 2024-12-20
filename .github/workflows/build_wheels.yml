@@ -20,7 +20,7 @@ jobs:
 
       - name: Build wheels
         env:
-          CIBW_BUILD: cp310-* cp311-* cp312-* cp313-*
+          CIBW_BUILD: cp311-* cp312-* cp313-*
           CIBW_SKIP: pp*
           CIBW_BEFORE_BUILD: >
             python -m pip install --upgrade pip
@@ -28,7 +28,7 @@ jobs:
             && cd src/pyquadkey2/quadkey/tilesystem
             && python setup.py build_ext --inplace
           CIBW_TEST_COMMAND: >
-            python {package}/tests/__init__.py
+            python -vvv {package}/tests/__init__.py
         run: |
           pipx run cibuildwheel==2.22.0
 
