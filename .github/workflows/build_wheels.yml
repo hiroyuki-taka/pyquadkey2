@@ -52,7 +52,7 @@ jobs:
 
   create_release:
     name: Build
-    needs: [build_wheels, build_sdist]
+    needs: [ build_wheels, build_sdist ]
     runs-on: ubuntu-latest
 
     steps:
@@ -73,7 +73,7 @@ jobs:
 
   create_pages:
     name: Create Pages
-    needs: [build_wheels, build_sdist]
+    needs: [ build_wheels, build_sdist ]
     runs-on: ubuntu-latest
 
     environment:
@@ -92,9 +92,13 @@ jobs:
 
       - name: create PyPI index
         run: |
-          ls dist > package-files
-          pipx run dumb-pypi --package-list package-files --packages-url $GITHUB_SERVER_URL/hiroyuki-taka/pyquadkey2/releases/download/0.3.1/ --output-dir data
-          ls -laR data
+          for file in dist/*; do
+            echo -e "{\"file\": \"$file\", \"hash:\": \"sha256=$(sha256sum $file | awk '{print $1}')\"}\n" >> package-list.json
+          done
+          cat package-list.json
+          pipx run dumb-pypi --package-list-json package-list.json \
+            --packages-url $GITHUB_SERVER_URL/hiroyuki-taka/pyquadkey2/releases/download/0.3.1/ \
+            --output-dir data
 
       - uses: actions/upload-pages-artifact@v3
         with:
