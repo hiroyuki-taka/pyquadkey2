@@ -7,14 +7,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-13, macos-latest ]
+#        os: [ ubuntu-latest, windows-latest, macos-13, macos-latest ]
+        os: [ macos-latest ]
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Build wheels
         env:
-          CIBW_BUILD: cp313-* cp312-* cp311-* cp310-*
+#          CIBW_BUILD: cp313-* cp312-* cp311-* cp310-*
+          CIBW_BUILD: cp313-*
           CIBW_SKIP: pp* *-win32 *_i686
           CIBW_BEFORE_BUILD: >
             python -m pip install --upgrade pip
@@ -77,8 +79,12 @@ jobs:
     runs-on: ubuntu-latest
 
     environment:
-      name: pyquadkey[binary]
+      name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
+    permissions:
+      pages: write
+      id-token: write
 
     steps:
       - uses: actions/download-artifact@v4
