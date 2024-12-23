@@ -50,7 +50,6 @@ jobs:
           name: sdist
           path: ./dist/*.tar.gz
 
-
   create_release:
     name: Build
     needs: [build_wheels, build_sdist]
@@ -71,3 +70,28 @@ jobs:
           files: |
             dist/*.whl
             dist/*.tar.gz
+
+  create_pages:
+    name: Create Pages
+    needs: [build_wheels, build_sdist]
+    runs-on: ubuntu-latest
+
+    environment:
+      name: pyquadkey[binary]
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: create PyPI index
+        run: |
+          ls dist > package-files
+          pipx run dumb-pypi --package-list package-files --packages-url $GITHUB_SERVER_URL/$GITHUB_ACTION_REPOSITORY/releases/download/0.3.1/ --output-dir data
+          ls -laR data
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
