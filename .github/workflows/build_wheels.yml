@@ -93,7 +93,7 @@ jobs:
       - name: create PyPI index
         run: |
           for file in dist/*; do
-            echo -e "{\"file\": \"$file\", \"hash:\": \"sha256=$(sha256sum $file | awk '{print $1}')\"}\n" >> package-list.json
+            echo -e "{\"filename\": \"$file\", \"hash:\": \"sha256=$(sha256sum $file | awk '{print $1}')\"}" >> package-list.json
           done
           cat package-list.json
           pipx run dumb-pypi --package-list-json package-list.json \
