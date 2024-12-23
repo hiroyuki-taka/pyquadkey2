@@ -98,9 +98,8 @@ jobs:
           pipx run dumb-pypi --package-list package-files --packages-url $GITHUB_SERVER_URL/$GITHUB_ACTION_REPOSITORY/releases/download/0.3.1/ --output-dir data
           ls -laR data
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-pages-artifact@v3
         with:
-          name: github-pages
           path: data
 
       - name: Deploy to GitHub Pages
