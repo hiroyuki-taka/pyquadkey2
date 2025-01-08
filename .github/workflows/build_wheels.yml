@@ -50,30 +50,11 @@ jobs:
           name: sdist
           path: ./dist/*.tar.gz
 
-  generate_release_parameter:
-    runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v')
-    outputs:
-      release_name: ${{ steps.generate-release-name.output.RELEASE_NAME }}
-      tag_name: ${{ steps.generate-release-name.output.TAG_NAME }}
-    env:
-      TAG: ${{ github.ref_name }}
-    steps:
-      - name: genrerate release name
-        id: generate-release-name
-        shell: base
-        run: |
-          echo "RELEASE_NAME=Release ${TAG#v}" >> $GITHUB_OUTPUT
-      - name: generate release tag
-        id: generate-release-tag
-        shell: base
-        run: |
-          echo "TAG_NAME=${TAG#v}" >> $GITHUB_OUTPUT
-
 
   create_release:
     name: Build
-    needs: [ build_wheels, build_sdist, generate_release_parameter ]
+    needs: [ build_wheels, build_sdist ]
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
 
     steps:
@@ -84,8 +65,8 @@ jobs:
 
       - uses: softprops/action-gh-release@v2
         with:
-          name: ${{ needs.generate_release_parameter.outputs.release_name }}
-          tag_name: ${{ needs.generate_release_parameter.outputs.tag_name }}
+          name: Release ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
           draft: false
           prerelease: false
           files: |
@@ -94,7 +75,8 @@ jobs:
 
   create_pages:
     name: Create Pages
-    needs: [ build_wheels, build_sdist, generate_release_parameter ]
+    needs: [ build_wheels, build_sdist ]
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
 
     environment:
@@ -118,7 +100,7 @@ jobs:
           done
           cat package-list.json
           pipx run dumb-pypi --package-list-json package-list.json \
-            --packages-url $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ needs.generate_release_parameter.outputs.tag_name }}/ \
+            --packages-url $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ github.ref_name }}/ \
             --output-dir data
 
       - uses: actions/upload-pages-artifact@v3
