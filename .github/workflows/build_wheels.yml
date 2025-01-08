@@ -66,8 +66,8 @@ jobs:
 
       - uses: softprops/action-gh-release@v2
         with:
-          name: "Release ${v#TAG}"
-          tag_name: ${v#TAG}
+          name: "Release ${TAG#v}"
+          tag_name: ${TAG#v}
           draft: false
           prerelease: false
           files: |
