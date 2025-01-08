@@ -64,7 +64,7 @@ jobs:
         shell: base
         run: |
           echo "RELEASE_NAME=Release ${TAG#v}" >> $GITHUB_OUTPUT
-      - name: genrerate release tag
+      - name: generate release tag
         id: generate-release-tag
         shell: base
         run: |
