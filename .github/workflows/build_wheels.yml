@@ -66,12 +66,11 @@ jobs:
 
       - run: |
           echo "RELEASE_NAME=Release ${TAG#v}" >> $GITHUB_ENV
-          echo "TAG_NAME=Release ${TAG#v}" >> $GITHUB_ENV
 
       - uses: softprops/action-gh-release@v2
         with:
-          name: ${{ env.RELEASE_NAME }}
-          tag_name: ${{ env.TAG_NAME }}
+          name: Release ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
           draft: false
           prerelease: false
           files: |
