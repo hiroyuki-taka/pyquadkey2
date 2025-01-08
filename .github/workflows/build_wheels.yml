@@ -67,6 +67,9 @@ jobs:
       - run: |
           echo "RELEASE_NAME=Release ${TAG#v}" >> $GITHUB_ENV
 
+      - run: |
+          env
+
       - uses: softprops/action-gh-release@v2
         with:
           name: Release ${{ github.ref_name }}
@@ -106,7 +109,7 @@ jobs:
           done
           cat package-list.json
           pipx run dumb-pypi --package-list-json package-list.json \
-            --packages-url $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${v#TAG}/ \
+            --packages-url $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${TAG#v}/ \
             --output-dir data
 
       - uses: actions/upload-pages-artifact@v3
