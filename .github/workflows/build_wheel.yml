@@ -80,7 +80,7 @@ jobs:
     runs-on: ubuntu-latest
 
     environment:
-      name: github-pages
+      name: dumb-pypi
       url: ${{ steps.deployment.outputs.page_url }}
 
     permissions:
@@ -110,5 +110,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          artifact_name: install source ${{ github.ref_name }}
